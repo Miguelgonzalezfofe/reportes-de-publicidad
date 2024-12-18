@@ -47,14 +47,22 @@ function mostrarDatosGuardados() {
     tabla.innerHTML = '';
 
     // Agregar filas con los datos
-    datosGuardados.forEach(dato => {
+    datosGuardados.forEach((dato, index) => {
         const fila = `
             <tr>
                 <td>${dato.fecha}</td>
                 <td>$${dato.ventas.toFixed(2)}</td>
                 <td>${dato.clientes}</td>
+                <td> <button class="btn btn-danger" onclick="eliminarDato('${index}')">Eliminar</button> </td>
             </tr>
         `;
         tabla.insertAdjacentHTML('beforeend', fila);
     });
+}
+// Eliminar un dato específico
+function eliminarDato(index) {
+    let datos = JSON.parse(localStorage.getItem("resultados")) || [];
+    datos.splice(index, 1); // Elimina el dato en la posición "index"
+    localStorage.setItem("resultados", JSON.stringify(datos));
+    mostrarDatosGuardados(); // Actualiza la tabla
 }
