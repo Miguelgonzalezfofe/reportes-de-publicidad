@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Datos por Día</title>
+    <!-- link toastify  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -13,6 +15,7 @@
     <!-- Header -->
     <header class="bg-primary text-white py-3 text-center shadow">
         <h1 class="m-0">Agregar Datos por Día</h1>
+        <span id="nameUser">Usuario</span>
     </header>
     <ul class="nav bg-light justify-content-center">
         <li class="nav-item">
@@ -23,6 +26,9 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="resultado.html">Reportes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" id="CerrarSesion" >Cerrar Sesión</a>
         </li>
 
     </ul>
@@ -77,9 +83,12 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <!-- Script modularizado -->
+    <script type="module" src="./js/index.js"></script>
     <script src="js/ingreso.js"></script>
+
 </body>
 
 </html>
