@@ -1,8 +1,45 @@
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js'
+import { auth, getData, upDateData } from './index.js';
+import { showMessage } from './showMessage.js';
+let emailUser = '';
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        emailUser = user.email
+    }
+})
+
 // Ejecutar al cargar la página para mostrar los datos guardados
 document.addEventListener('DOMContentLoaded', mostrarDatosGuardados);
 
 // Event Listener para guardar datos al enviar el formulario
 document.getElementById('formDatos').addEventListener('submit', guardarDatos);
+
+// Función para sincronizar los datos del localStorage con Firebase
+async function sincronizarConFirebase(emailUser) {
+    // Obtener los datos desde localStorage
+    const datosLocales = JSON.parse(localStorage.getItem('resultados')) || [];
+
+    if (datosLocales.length === 0) {
+        showMessage("No hay datos para sincronizar");
+        return;
+    }
+
+    try {
+        // Guardar los datos en Firebase
+        await upDateData(emailUser, { dato: datosLocales });
+
+        // Actualizar la última sincronización
+        localStorage.setItem('ultimaSincronizacion', Date.now());
+
+        showMessage("Datos sincronizados","success");
+    } catch (error) {
+        console.error("Error durante la sincronización:", error);
+        showMessage("Error al sincronizar");
+    }
+}
+
+const btnSincronizar = document.getElementById('btnSincronizar');
+btnSincronizar.addEventListener('click', async () => sincronizarConFirebase(emailUser));
 
 // Función para guardar datos en localStorage
 function guardarDatos(event) {
@@ -48,17 +85,38 @@ function mostrarDatosGuardados() {
 
     // Agregar filas con los datos
     datosGuardados.forEach((dato, index) => {
-        const fila = `
-            <tr>
-                <td>${dato.fecha}</td>
-                <td>$${dato.ventas.toFixed(2)}</td>
-                <td>${dato.clientes}</td>
-                <td> <button class="btn btn-danger" onclick="eliminarDato('${index}')">Eliminar</button> </td>
-            </tr>
-        `;
-        tabla.insertAdjacentHTML('beforeend', fila);
+        // Crear una nueva fila (tr)
+        const fila = document.createElement('tr');
+
+        // Crear y agregar la primera celda (fecha)
+        const celdaFecha = document.createElement('td');
+        celdaFecha.textContent = dato.fecha;
+        fila.appendChild(celdaFecha);
+
+        // Crear y agregar la segunda celda (ventas)
+        const celdaVentas = document.createElement('td');
+        celdaVentas.textContent = `$${dato.ventas.toFixed(2)}`;
+        fila.appendChild(celdaVentas);
+
+        // Crear y agregar la tercera celda (clientes)
+        const celdaClientes = document.createElement('td');
+        celdaClientes.textContent = dato.clientes;
+        fila.appendChild(celdaClientes);
+
+        // Crear la celda del botón "Eliminar"
+        const celdaBoton = document.createElement('td');
+        const eliminarBtn = document.createElement('button');
+        eliminarBtn.className = 'btn btn-danger';
+        eliminarBtn.textContent = 'Eliminar';
+        eliminarBtn.addEventListener('click', () => eliminarDato(index));  // Agregar evento de eliminación
+        celdaBoton.appendChild(eliminarBtn);  // Agregar el botón a la celda
+        fila.appendChild(celdaBoton);  // Agregar la celda a la fila
+
+        // Agregar la fila a la tabla
+        tabla.appendChild(fila);
     });
 }
+
 // Eliminar un dato específico
 function eliminarDato(index) {
     let datos = JSON.parse(localStorage.getItem("resultados")) || [];

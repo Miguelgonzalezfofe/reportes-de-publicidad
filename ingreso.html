@@ -15,11 +15,11 @@
     <!-- Header -->
     <header class="bg-primary text-white py-3 text-center shadow">
         <h1 class="m-0">Agregar Datos por Día</h1>
-        <span id="nameUser">Usuario</span>
+        <span id="nameUser"></span>
     </header>
     <ul class="nav bg-light justify-content-center">
-        <li class="nav-item">
-            <a class="nav-link" href="index.html">Inicio</a>
+        <li class="nav-item logged-Out">
+            <a class="nav-link " href="index.html">Iniciar Sesión</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="ingreso.html">Ingreso de datos</a>
@@ -27,8 +27,8 @@
         <li class="nav-item">
             <a class="nav-link" href="resultado.html">Reportes</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#" id="CerrarSesion" >Cerrar Sesión</a>
+        <li class="nav-item logged-In">
+            <a class="nav-link " href="#" id="CerrarSesion">Cerrar Sesión</a>
         </li>
 
     </ul>
@@ -63,6 +63,9 @@
                 <button type="submit" class="btn btn-primary">Guardar Datos</button>
             </div>
         </form>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success btn-lg" id="btnSincronizar">Sincronizar datos</button>
+        </div>
 
         <!-- Sección para mostrar los datos ingresados -->
         <section>
@@ -87,7 +90,7 @@
 
     <!-- Script modularizado -->
     <script type="module" src="./js/index.js"></script>
-    <script src="js/ingreso.js"></script>
+    <script type="module" src="js/ingreso.js"></script>
 
 </body>
 

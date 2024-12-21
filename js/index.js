@@ -8,7 +8,7 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.9.0/fi
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js"
-import { doc, setDoc, collection, addDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"
+import { doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js"
 import { showMessage } from "./showMessage.js";
 import closeModal from "./closeModal.js";
 
@@ -23,18 +23,28 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
+export const auth = getAuth(app)
 const db = getFirestore(app)
+const loggedOutLinks = document.querySelectorAll('.logged-Out')
+const loggedInLinks = document.querySelectorAll('.logged-In')
+const nameuser = document.querySelector('#nameUser')
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log('User is signed in')
-        const nameuser = document.querySelector('#nameUser')
-        if(nameuser){
+        if (nameuser) {
             nameuser.innerHTML = user.email
         }
+        loggedInLinks.forEach(link => link.style.display = 'block')
+        loggedOutLinks.forEach(link => link.style.display = 'none')
+
     } else {
         console.log('User is signed out')
+        if (nameuser) {
+            nameuser.innerHTML = ''
+        }
+        loggedInLinks.forEach(link => link.style.display = 'none')
+        loggedOutLinks.forEach(link => link.style.display = 'block')
     }
 })
 /* Registro de usuarios */
@@ -49,8 +59,9 @@ if (signUpForm && btnRegister) {
 
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+            await createUser(email, { name })
+            await createData(email, { dato: [] })
             showMessage("Usuario registrado", "success")
-            console.log(userCredential.user)
             closeModal('registerModal')
             setTimeout(() => {
                 // window.location.href = "./ingreso.html"
@@ -125,4 +136,11 @@ if (btnLogout) {
     })
 
 }
+
+export const createUser = async (email, data) => setDoc(doc(db, "users", email), data)
+export const getUser = async (email) => getDoc(doc(db, "users", email))
+export const createData = async (email, data) => setDoc(doc(db, `users/${email}/BaseDatos`, "Datos"), data)
+export const getData = async (email) => getDoc(doc(db, `users/${email}/BaseDatos`, "Datos"))
+export const upDateData = async (email, data) => updateDoc(doc(db, `users/${email}/BaseDatos`, "Datos"), data)
+
 
