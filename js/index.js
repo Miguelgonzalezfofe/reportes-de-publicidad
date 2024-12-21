@@ -64,7 +64,7 @@ if (signUpForm && btnRegister) {
             showMessage("Usuario registrado", "success")
             closeModal('registerModal')
             setTimeout(() => {
-                // window.location.href = "./ingreso.html"
+                window.location.href = "./ingreso.html"
             }, 2500)
 
 
