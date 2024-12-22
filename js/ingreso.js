@@ -5,6 +5,9 @@ let emailUser = '';
 onAuthStateChanged(auth, (user) => {
     if (user) {
         emailUser = user.email
+        if (!JSON.parse(localStorage.getItem('resultados'))) {
+            sincronizarConFirebase(emailUser);
+        }
     }
 })
 
@@ -16,12 +19,20 @@ document.getElementById('formDatos').addEventListener('submit', guardarDatos);
 
 // Función para sincronizar los datos del localStorage con Firebase
 async function sincronizarConFirebase(emailUser) {
-    // Obtener los datos desde localStorage
-    const datosLocales = JSON.parse(localStorage.getItem('resultados')) || [];
+    let spinner = document.getElementById('spinner');
+    spinner.classList.toggle("visually-hidden")
 
-    if (datosLocales.length === 0) {
+    // Obtener los datos desde localStorage
+    let datosLocales = JSON.parse(localStorage.getItem('resultados')) || [];
+    const datosFirebase = await getData(emailUser);
+
+    if (datosLocales.length === 0 && !datosFirebase) {
         showMessage("No hay datos para sincronizar");
         return;
+    }
+
+    if (datosLocales.length === 0 && datosFirebase) {
+        datosLocales = datosFirebase.data().dato
     }
 
     try {
@@ -31,7 +42,12 @@ async function sincronizarConFirebase(emailUser) {
         // Actualizar la última sincronización
         localStorage.setItem('ultimaSincronizacion', Date.now());
 
-        showMessage("Datos sincronizados","success");
+        // actualizar resultados en localstorage
+        localStorage.setItem('resultados', JSON.stringify(datosLocales));
+        mostrarDatosGuardados();
+        spinner.classList.toggle("visually-hidden")
+
+        showMessage("Datos sincronizados", "success");
     } catch (error) {
         console.error("Error durante la sincronización:", error);
         showMessage("Error al sincronizar");

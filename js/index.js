@@ -104,7 +104,7 @@ if (loginForm && btnLogin) {
             console.log(userCredential.user)
             setTimeout(() => {
                 window.location.href = "./ingreso.html"
-            }, 2500)
+            }, 1000)
         } catch (error) {
             if (error.code === "auth/invalid-credential") {
                 showMessage("Error", "error")
@@ -130,6 +130,9 @@ if (btnLogout) {
     btnLogout.addEventListener('click', async (e) => {
         await signOut(auth)
         showMessage("Sesion cerrada", "success")
+        // ELIMINAR DATOS DE LOCALSTORAGE
+        localStorage.removeItem('resultados');
+        localStorage.removeItem('ultimaSincronizacion');
         setTimeout(() => {
             window.location.href = "../index.html"
         }, 1500)

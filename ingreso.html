@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- my styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -32,9 +34,15 @@
         </li>
 
     </ul>
-
+    <div class="spinner-overlay visually-hidden" id="spinner">
+        <div class="d-flex justify-content-center flex-column align-items-center">
+            <div class="spinner-border text-success" role="status"></div>
+            <span class="text-white mt-2">Cargando</span>
+        </div>
+    </div>
     <!-- Contenido principal -->
     <main class="container mt-5">
+        <!-- spinner de bootstrap -->
         <h2 class="text-center mb-4">Ingresar Datos Diarios</h2>
 
         <!-- Formulario para agregar datos -->
@@ -70,6 +78,8 @@
         <!-- Sección para mostrar los datos ingresados -->
         <section>
             <h4 class="mb-3">Datos Ingresados</h4>
+            <!-- <label for="">Periodo</label>
+            <input type="month"> <button class="btn btn-primary">Mostrar</button> -->
             <table class="table table-bordered text-center">
                 <thead class="table-secondary">
                     <tr>
